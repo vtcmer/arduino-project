@@ -60,11 +60,14 @@ struct {
 /////////////////////////////////////////////
 
 
-
+/////////////////////////////////////////
+// Configuración del Servo//////////////
+///////////////////////////////////////
 #define TRIG_PIN 8
 #define ECHO_PIN 7
 SR04 sr04 = SR04(ECHO_PIN,TRIG_PIN);
 Servo servo;  // create servo object to control a servo
+
 
 // -- Variables motores
 int ENG1 = 6;
@@ -75,25 +78,24 @@ int ENG2 =5;
 int IN3 =11;
 int IN4 =10;
 
-int SPEED = 205;
+int SPEED = 200;
 
 // -- Varibles de lógica
-bool automatic = true; // -- Se de forma autónoma
-bool checkDirection = true; // -- Indica que tiene que checkear la dirección en la que se mueve
-bool isStopped = true; // -- Valor boolean que indica que está parado
+bool automatic = false; // -- Indica si el movimiento es en automático con manual
+
 long minLimit = 30;
 
 bool showLog = false;
 
-void setup() 
-{
-  RemoteXY_Init (); 
+void setup() {
+  if (!automatic){
+    RemoteXY_Init ();
+  } else {
+    servo.attach(9);  
+    servo.write(60);
+  }
   
   
-  // TODO you setup code
-
-  servo.attach(9);  
-  servo.write(60);
 
   // -- Configuración del motor
   pinMode(ENG1, OUTPUT);
@@ -105,29 +107,176 @@ void setup()
   
 }
 
-void loop() 
-{ 
-  RemoteXY_Handler ();
+void loop() { 
+  
+
+  if (automatic){
+    handleAutomatic();
+  } else {
+    handleManual();
+  }
   
   
-  // TODO you loop code
-  // use the RemoteXY structure for data transfer
-  if (RemoteXY.direction == 0){
-    moveStop();
-  } else if (RemoteXY.direction == 1){
+
+}
+
+/**
+ * Movimiento manual del robot
+ */
+void handleAutomatic(){
+  bool isForward = checkForward();
+  if (isForward){
     moveForward();
-  } else if (RemoteXY.direction == 2){
+  } else {
+     moveStop();
+     int position = 4;
+     while (position == 4){
+        moveBack();
+        delay(350);
+        moveStop();
+        position = findDireccion();
+     }  
+
+     if (position == 2){
+        turnRight(500);    
+     } else if (position == 3){
+        turnLeft(500);
+     }
+  }
+}
+
+/**
+ * Búsqueda de la dirección
+ * Valores devueltos:
+ *  2 - Derecha ->
+ *  3 - Izquierda  <-
+ *  4 - Atrás
+ */
+int findDireccion(){
+
+
+  int result = 4;
+
+  bool isRight = checkRight();
+  long dRight = getDistancia();
+    
+  bool isLeft = checkLeft();
+  long dLeft = getDistancia();
+
+  if (isRight && isLeft){
+    long diff = dRight - dLeft;
+    if (diff >= 0){
+      result = 2;
+    } else {
+      result = 3;
+    }
+    
+  } else if (isRight && !isLeft){
+    result = 2;
+  } else if (!isRight && isLeft){
+    result = 3;
+  } 
+
+  centerPosition();  
+
+  return result;
+  
+}
+
+/**
+ * Pone el sensor ultrasonico en la posición central
+ */
+void centerPosition(){
+  servo.write(60);  // centro   
+}
+
+/**
+ * Comprueba si existen obstaculos cercanos delante
+ */
+boolean checkForward(){
+  return !isLimit();
+}
+
+/**
+ * Comprueba si existen obstáculos ceranos a la derecha
+ */
+boolean checkRight(){
+  servo.write(0);
+  return !isLimit();
+}
+
+/**
+ * Comprueba si existen obstaculos cercanos a la izquierda
+ */
+boolean checkLeft(){
+  servo.write(130);  // mirar a la izquierda
+  return !isLimit();
+}
+
+/**
+ * Devuelve la distancia más al objeto más cercano identificado
+ */
+long getDistancia(){
+  long distancia = sr04.Distance();
+  delay(350);
+  if (showLog){
+    Serial.print("Distancia: ");
+    Serial.print(distancia);
+  }
+  return distancia;
+}
+
+
+/**
+ * Verifica si está en el límite
+ */
+bool isLimit(){
+  bool result = false;
+  long d = 0;
+ 
+  do {
+    d = getDistancia();
+  } while (d >= 2000);
+
+   if (d <= minLimit){
+    result = true;
+  }
+
+  return result;
+}
+
+
+
+/**
+ * Manejo manual del robot
+ */
+void handleManual(){
+
+  RemoteXY_Handler ();
+  movementManual(RemoteXY.direction);
+  
+}
+
+/**
+ * Movimiento manual del robot
+ */
+void movementManual(int direction){
+  if (direction == 0){
+    moveStop();
+    //findDireccion();
+  } else if (direction == 1){
+    moveForward();
+  } else if (direction == 2){
     moveBack();
-  } else if (RemoteXY.direction == 3){
+  } else if (direction == 3){
     turnLeft(500);
     RemoteXY.direction = 0;
-  } else if (RemoteXY.direction == 4){
-    turnRigh(500);
+  } else if (direction == 4){
+    turnRight(500);
     RemoteXY.direction = 0;
   } else {
     moveStop();
   }
-
 
 }
 
@@ -139,7 +288,7 @@ void loop()
 void moveForward(){
 
   moveWheelLeftForward(SPEED);
-  moveWheelRightForward((SPEED + 45));
+  moveWheelRightForward((SPEED + 50));
   
 }
 
@@ -148,7 +297,7 @@ void moveForward(){
  */
 void moveBack(){
   moveWheelLeftBack(SPEED);
-  moveWheelRightBack((SPEED + 45));
+  moveWheelRightBack((SPEED + 50));
 }
 
 void turnLeft(long time){
@@ -157,7 +306,7 @@ void turnLeft(long time){
   delay(time);
 }
 
-void turnRigh(long time){
+void turnRight(long time){
   moveWheelLeftForward(SPEED);
   moveWheelRightBack(SPEED);
   delay(time);

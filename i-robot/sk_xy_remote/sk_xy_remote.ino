@@ -88,13 +88,20 @@ long minLimit = 30;
 bool showLog = false;
 
 void setup() {
-  if (!automatic){
-    RemoteXY_Init ();
-  } else {
-    servo.attach(9);  
-    servo.write(60);
-  }
+
+  RemoteXY_Init ();
   
+  servo.attach(9);  
+  servo.write(60);
+  
+  if (!automatic){
+    servo.detach();
+  } else {
+    
+  }
+
+ 
+ 
   
 
   // -- Configuración del motor
@@ -274,6 +281,8 @@ void movementManual(int direction){
   } else if (direction == 4){
     turnRight(500);
     RemoteXY.direction = 0;
+    //servo.attach(9);  
+    //automatic = true;
   } else {
     moveStop();
   }

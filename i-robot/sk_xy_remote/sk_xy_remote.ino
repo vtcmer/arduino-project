@@ -113,17 +113,19 @@ void loop()
   // TODO you loop code
   // use the RemoteXY structure for data transfer
   if (RemoteXY.direction == 0){
-    
-  } else if (RemoteXY.direction == 1){
-    straightOn();
-  } else if (RemoteXY.direction == 2){
     moveStop();
+  } else if (RemoteXY.direction == 1){
+    moveForward();
+  } else if (RemoteXY.direction == 2){
+    moveBack();
   } else if (RemoteXY.direction == 3){
-
+    turnLeft(500);
+    RemoteXY.direction = 0;
   } else if (RemoteXY.direction == 4){
-
+    turnRigh(500);
+    RemoteXY.direction = 0;
   } else {
-    
+    moveStop();
   }
 
 
@@ -132,13 +134,33 @@ void loop()
 
 
 /**
- * Movimiento de frente
+ * Movimiento hacia adelante
  */
-void straightOn(){
+void moveForward(){
 
   moveWheelLeftForward(SPEED);
   moveWheelRightForward((SPEED + 45));
   
+}
+
+/**
+ * Movimiento hacia atrás
+ */
+void moveBack(){
+  moveWheelLeftBack(SPEED);
+  moveWheelRightBack((SPEED + 45));
+}
+
+void turnLeft(long time){
+  moveWheelRightForward(SPEED);
+  moveWheelLeftBack(SPEED);
+  delay(time);
+}
+
+void turnRigh(long time){
+  moveWheelLeftForward(SPEED);
+  moveWheelRightBack(SPEED);
+  delay(time);
 }
 
 
@@ -153,21 +175,45 @@ void moveStop(){
   analogWrite(ENG2, 0);
 }
 
+
+
+/**
+ * Mover la rueda izquierda hacia adelante
+ */
 void moveWheelLeftForward(int speed){
 
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, HIGH);
   analogWrite(ENG2, speed);
-  
 }
 
-
+/**
+ * Mover la rueda derecha hacia adelante
+ */
 void moveWheelRightForward(int speed){
 
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
   analogWrite(ENG1, speed);
+}
 
-  
-  
+
+/**
+ * Mover la rueda izquierda hacia adelante
+ */
+void moveWheelLeftBack(int speed){
+
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+  analogWrite(ENG2, speed);
+}
+
+/**
+ * Mover la rueda derecha hacia adelante
+ */
+void moveWheelRightBack(int speed){
+
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  analogWrite(ENG1, speed);
 }

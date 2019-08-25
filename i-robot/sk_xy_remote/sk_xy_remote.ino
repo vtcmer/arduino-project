@@ -39,15 +39,18 @@
 
 // RemoteXY configurate  
 #pragma pack(push, 1)
-uint8_t RemoteXY_CONF[] =
-  { 255,1,0,0,0,11,0,8,13,0,
-  3,133,17,26,63,14,2,26 };
+uint8_t RemoteXY_CONF[] = 
+  { 255,2,0,0,0,28,0,8,13,0,
+  3,133,17,26,63,14,2,26,2,0,
+  34,7,22,11,2,26,31,31,79,78,
+  0,79,70,70,0 }; 
   
 // this structure defines all the variables of your control interface 
 struct {
 
     // input variable
   uint8_t direction; // =0 if select position A, =1 if position B, =2 if position C, ... 
+  uint8_t status; // =1 if switch ON and =0 if OFF 
 
     // other variable
   uint8_t connect_flag;  // =1 if wire connected, else =0 
@@ -81,7 +84,8 @@ int IN4 =10;
 int SPEED = 200;
 
 // -- Varibles de lógica
-bool automatic = false; // -- Indica si el movimiento es en automático con manual
+bool automatic = false; 
+// -- Indica si el movimiento es en automático con manual
 
 long minLimit = 30;
 
@@ -89,20 +93,15 @@ bool showLog = false;
 
 void setup() {
 
-  RemoteXY_Init ();
-  
-  servo.attach(9);  
-  servo.write(60);
-  
-  if (!automatic){
-    servo.detach();
+  if (automatic){
+    servo.attach(9);  
+    servo.write(60);
   } else {
-    
+    RemoteXY_Init ();
   }
+   
 
- 
- 
-  
+  Serial.begin(9600);
 
   // -- Configuración del motor
   pinMode(ENG1, OUTPUT);
@@ -115,17 +114,56 @@ void setup() {
 }
 
 void loop() { 
+ 
+ // verifyChangeStatus(RemoteXY.status );
+ /*
+  if (RemoteXY.status == 0){ // -- Manual
+    automatic = false;   
+    servo.detach();
+  } else if (RemoteXY.status == 1){ //Automático
+    automatic = true; 
+    servo.attach(9);
+  }
   
-
+  */
+ 
   if (automatic){
     handleAutomatic();
   } else {
     handleManual();
   }
+ 
+
   
   
 
 }
+
+void verifyChangeStatus(int status){
+
+  if (!automatic && (status == 1)){
+    // -- Cambio a automático
+    automatic = true;
+    moveStop();
+    //servo.attach(9); 
+    centerPosition();
+    delay(500);
+    Serial.println("Cambio Automático");
+  } else if (automatic && (status == 0)){
+    // -- Cambio a Manual
+    automatic = false;
+    moveStop();
+    centerPosition();
+    //servo.detach();
+    delay(500);
+    Serial.println("Cambio Manual");
+  } else {
+    Serial.println(">>>>>>>>>>>>><");
+  }
+  
+}
+
+
 
 /**
  * Movimiento manual del robot
@@ -150,6 +188,7 @@ void handleAutomatic(){
         turnLeft(500);
      }
   }
+  
 }
 
 /**

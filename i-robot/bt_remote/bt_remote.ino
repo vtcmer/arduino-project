@@ -60,6 +60,7 @@ long minLimit = 30;
 bool showLog = false;
 
 char direction = 'S';
+char lastDirection = 'S';
 
 void setup() {
 
@@ -81,6 +82,9 @@ void setup() {
   
 }
 
+/**
+ * Lectura de comendos que vienen de android
+ */
 void readCommand(){
 
   if (EEBlue.available() > 0){
@@ -88,12 +92,16 @@ void readCommand(){
     
     if (input == '1'){
       // -- Cambio a Manual
+      direction = 'S';
+      lastDirection = 'S';
       automatic = false;
       moveStop();
       centerPosition();
       delay(500);
     Serial.println("Cambio Manual");
     } else if (input == '2'){
+      direction = 'S';
+      lastDirection = 'S';
       automatic = true;
       moveStop();
       centerPosition();
@@ -107,27 +115,25 @@ void readCommand(){
     }
     
   } 
+  
+}
 
-  //delay(1000);
+/**
+ * Enviar datos a la aplicación android
+ */
+void sendData(){
 
+  if (direction != lastDirection){
+    EEBlue.print(direction);
+    EEBlue.println();
+    lastDirection = direction;
+  }
   
 }
 
 void loop() {
 
   readCommand();
- 
- // verifyChangeStatus(RemoteXY.status );
- /*
-  if (RemoteXY.status == 0){ // -- Manual
-    automatic = false;   
-    servo.detach();
-  } else if (RemoteXY.status == 1){ //Automático
-    automatic = true; 
-    servo.attach(9);
-  }
-  
-  */
  
   if (automatic){
     handleAutomatic();
@@ -141,29 +147,6 @@ void loop() {
 
 }
 
-void verifyChangeStatus(int status){
-
-  if (!automatic && (status == 1)){
-    // -- Cambio a automático
-    automatic = true;
-    moveStop();
-    //servo.attach(9); 
-    centerPosition();
-    delay(500);
-    Serial.println("Cambio Automático");
-  } else if (automatic && (status == 0)){
-    // -- Cambio a Manual
-    automatic = false;
-    moveStop();
-    centerPosition();
-    //servo.detach();
-    delay(500);
-    Serial.println("Cambio Manual");
-  } else {
-    Serial.println(">>>>>>>>>>>>><");
-  }
-  
-}
 
 
 
@@ -173,9 +156,14 @@ void verifyChangeStatus(int status){
 void handleAutomatic(){
   bool isForward = checkForward();
   if (isForward){
+    Serial.println("de frente");
+    direction = 'F';
+    sendData();
     moveForward();
   } else {
      moveStop();
+     direction = 'B';
+     sendData();
      int position = 4;
      while (position == 4){
         moveBack();
@@ -185,8 +173,12 @@ void handleAutomatic(){
      }  
 
      if (position == 2){
+        direction = 'R';
+        sendData();
         turnRight(500);    
      } else if (position == 3){
+        direction = 'L';
+        sendData();
         turnLeft(500);
      }
   }

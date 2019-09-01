@@ -66,28 +66,24 @@ public class MainActivity extends AppCompatActivity {
 
         bluetoothIn = new Handler() {
             public void handleMessage(Message msg) {
-                if (msg.what == handlerState) {                                        //if message is what we want
-                    String readMessage = (String) msg.obj;                                                                // msg.arg1 = bytes from connect thread
-                    recDataString.append(readMessage);                                    //keep appending to string until ~
-                    int endOfLineIndex = recDataString.indexOf("~");                    // determine the end-of-line
-                    if (endOfLineIndex > 0) {                                           // make sure there data before ~
-                        String dataInPrint = recDataString.substring(0, endOfLineIndex);    // extract string
+                if (msg.what == handlerState) {
 
-                        int dataLength = dataInPrint.length();                            //get length of data received
+                    String data = (String) msg.obj;                                                                // msg.arg1 = bytes from connect thread
 
-                        if (recDataString.charAt(0) == '#')                                //if it starts with # we know it is what we are looking for
-                        {
-                            String sensor0 = recDataString.substring(1, 5);             //get sensor value from string between indices 1-5
-                            String sensor1 = recDataString.substring(6, 10);            //same again...
-                            String sensor2 = recDataString.substring(11, 15);
-                            String sensor3 = recDataString.substring(16, 20);
-
-
-                        }
-                        recDataString.delete(0, recDataString.length());                    //clear all string data
-                        // strIncom =" ";
-                        dataInPrint = " ";
+                    if (data.equals("F")){
+                        resetStatusActionsButtons();
+                        selectAction(btnForward);
+                    } else if (data.equals("B")){
+                        resetStatusActionsButtons();
+                        selectAction(btnBack);
+                    } else if (data.equals("R")){
+                        resetStatusActionsButtons();
+                        selectAction(btnRight);
+                    } else if (data.equals("L")){
+                        resetStatusActionsButtons();
+                        selectAction(btnLeft);
                     }
+
                 }
             }
         };

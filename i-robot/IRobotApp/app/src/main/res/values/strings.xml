@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">IRobotApp</string>
+    <string name="none_paired">Ningun dispositivo pudo ser emparejado</string>
+</resources>

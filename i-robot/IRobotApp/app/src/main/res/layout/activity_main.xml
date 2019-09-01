@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:id="@+id/scrollView">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/linearContenedor">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_above="@+id/linearContenedorProbarConexion"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/Conexion">
+
+
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/linearPruebaConexion">
+
+                        <Button
+                            android:id="@+id/btnManual"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="Manual"
+                            android:layout_marginRight="30dp"
+                            android:background="@color/active"/>
+
+
+                        <Button
+                            android:id="@+id/btnAutomatic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"
+                            android:text="Automático"
+                            android:background="@color/disabled"/>
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/linearSeparador"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/linearSeparador"
+                    android:id="@+id/lineaSeparador"></LinearLayout>
+
+
+
+                <ImageButton
+                    android:id="@+id/btnForward"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:text="Adelante"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:src="@android:drawable/arrow_up_float"
+                    android:background="@color/enabled"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="30dp">
+
+                    <ImageButton
+                        android:id="@+id/btnLeft"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@color/enabled"
+                        android:src="@android:drawable/ic_media_rew"
+                        android:text="Izquierda" />
+
+
+                    <Button
+                        android:id="@+id/btnStop"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        android:background="@color/stop"
+                        android:gravity="center"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="20dp"
+                        android:text="O" />
+
+                    <ImageButton
+                        android:id="@+id/btnRight"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@color/enabled"
+                        android:src="@android:drawable/ic_media_ff"
+                        android:text="Derecha" />
+
+
+                </LinearLayout>
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:text="Atrás"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:src="@android:drawable/arrow_down_float"
+                    android:background="@color/enabled"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+
+
+    </ScrollView>
+
+
+</RelativeLayout>

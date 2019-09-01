@@ -142,8 +142,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.btnAutomatic, R.id.btnManual})
-    public void onViewClicked(View view) {
+    @OnClick({R.id.btnAutomatic, R.id.btnManual, R.id.btnModeStop})
+    public void onChangeMode(View view) {
         switch (view.getId()) {
             case R.id.btnManual:
                 this.changeMode(false);
@@ -154,6 +154,10 @@ public class MainActivity extends AppCompatActivity {
                 this.changeMode(true);
                 mConnectedThread.write("2");    // Send "0" via Bluetooth
                 Toast.makeText(getBaseContext(), "Automático", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btnModeStop:
+                mConnectedThread.write("3");   
+                Toast.makeText(getBaseContext(), "Stop", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -179,9 +183,7 @@ public class MainActivity extends AppCompatActivity {
         //creates secure outgoing connecetion with BT device using UUID
     }
 
-    @OnClick(R.id.btnManual)
-    public void onViewClicked() {
-    }
+
 
     @OnClick({R.id.btnStop, R.id.btnForward, R.id.btnBack, R.id.btnRight, R.id.btnLeft})
     public void onChangeDirection(View view) {

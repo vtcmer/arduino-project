@@ -56,7 +56,17 @@
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentTop="true"
                             android:text="Automático"
+                            android:layout_marginRight="30dp"
                             android:background="@color/disabled"/>
+
+                        <Button
+                            android:id="@+id/btnModeStop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"
+                            android:text="Stop"
+                            android:background="@color/stop"/>
 
 
 

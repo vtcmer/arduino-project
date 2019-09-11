@@ -11,7 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ScrollView;
+
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -22,8 +24,6 @@ import java.util.UUID;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static java.lang.Thread.sleep;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,8 +46,15 @@ public class MainActivity extends AppCompatActivity {
     ImageButton btnRight;
     @BindView(R.id.btnBack)
     ImageButton btnBack;
-    @BindView(R.id.scrollView)
-    ScrollView scrollView;
+
+    @BindView(R.id.txtSeekBarLeft)
+    TextView txtSeekBarLeft;
+    @BindView(R.id.seekBarLeft)
+    SeekBar seekBarLeft;
+    @BindView(R.id.txtSeekBarRigth)
+    TextView txtSeekBarRigth;
+    @BindView(R.id.seekBarRight)
+    SeekBar seekBarRight;
 
     private BluetoothAdapter btAdapter = null;
     private BluetoothSocket btSocket = null;
@@ -57,11 +64,16 @@ public class MainActivity extends AppCompatActivity {
     // String for MAC address
     private static String address = null;
 
+    final static Integer SPEED_LEFT_DEFAULT = 200;
+    final static Integer SPEED_RIGHT_DEFATUL = 200;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        this.onSeekBarChange();
 
 
         bluetoothIn = new Handler() {
@@ -70,16 +82,16 @@ public class MainActivity extends AppCompatActivity {
 
                     String data = (String) msg.obj;                                                                // msg.arg1 = bytes from connect thread
 
-                    if (data.equals("F")){
+                    if (data.equals("F")) {
                         resetStatusActionsButtons();
                         selectAction(btnForward);
-                    } else if (data.equals("B")){
+                    } else if (data.equals("B")) {
                         resetStatusActionsButtons();
                         selectAction(btnBack);
-                    } else if (data.equals("R")){
+                    } else if (data.equals("R")) {
                         resetStatusActionsButtons();
                         selectAction(btnRight);
-                    } else if (data.equals("L")){
+                    } else if (data.equals("L")) {
                         resetStatusActionsButtons();
                         selectAction(btnLeft);
                     }
@@ -156,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getBaseContext(), "Automático", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnModeStop:
-                mConnectedThread.write("3");   
+                mConnectedThread.write("3");
                 Toast.makeText(getBaseContext(), "Stop", Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -182,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
         return device.createRfcommSocketToServiceRecord(BTMODULEUUID);
         //creates secure outgoing connecetion with BT device using UUID
     }
-
 
 
     @OnClick({R.id.btnStop, R.id.btnForward, R.id.btnBack, R.id.btnRight, R.id.btnLeft})
@@ -214,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Cambio entre modo manual y automático
+     *
      * @param automatic
      */
     void changeMode(boolean automatic) {
@@ -232,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Activa y desactiva los botones
+     *
      * @param active
      */
     private void changeStatusActionButtons(boolean active) {
@@ -246,24 +259,26 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Marca el botón como activo
+     *
      * @param imageButton
      */
-    private void selectAction(ImageButton imageButton){
+    private void selectAction(ImageButton imageButton) {
         imageButton.setBackgroundDrawable(getResources().getDrawable(R.color.active));
     }
 
     /**
      * Resetea el botón de acción al color por defecto
+     *
      * @param imageButton
      */
-    private void resetAction(ImageButton imageButton){
+    private void resetAction(ImageButton imageButton) {
         imageButton.setBackgroundDrawable(getResources().getDrawable(R.color.enabled));
     }
 
     /**
      * Establece el valor de colores por defecto de los botones de acción
      */
-    private void resetStatusActionsButtons(){
+    private void resetStatusActionsButtons() {
 
         this.btnForward.setBackgroundDrawable(getResources().getDrawable(R.color.enabled));
         this.btnBack.setBackgroundDrawable(getResources().getDrawable(R.color.enabled));
@@ -323,6 +338,70 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+
+
+
+
+    }
+
+
+    void onSeekBarChange(){
+
+        this.seekBarLeft.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            Integer speed = 0;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
+
+                speed = SPEED_LEFT_DEFAULT + progressValue;
+
+                txtSeekBarLeft.setText("IZ: " + speed);
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                txtSeekBarLeft.setText("IZ: " + speed );
+                mConnectedThread.write("L-"+speed);
+                // TODO ENVIAR DATO
+
+            }
+        });
+
+
+        this.seekBarRight.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            Integer speed = 0;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
+                speed = SPEED_LEFT_DEFAULT + progressValue;
+                txtSeekBarRigth.setText("DE: " + speed );
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                txtSeekBarRigth.setText("DE: ");
+                mConnectedThread.write("R-"+speed);
+                // TODO ENVIAR DATO
+
+
+            }
+        });
+
     }
 
 

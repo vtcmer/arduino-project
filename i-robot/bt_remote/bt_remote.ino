@@ -50,6 +50,8 @@ int IN3 =11;
 int IN4 =10;
 
 int SPEED = 200;
+int speedLeft = SPEED;
+int speedRight = SPEED;
 
 // -- Varibles de lógica
 bool automatic = false; 
@@ -59,8 +61,8 @@ long minLimit = 30;
 
 bool showLog = false;
 
-char direction = 'S';
-char lastDirection = 'S';
+String direction = "S";
+String lastDirection = "S";
 
 void setup() {
 
@@ -71,6 +73,7 @@ void setup() {
 
   Serial.begin(9600);
   EEBlue.begin(9600); 
+  EEBlue.setTimeout(50);
 
   // -- Configuración del motor
   pinMode(ENG1, OUTPUT);
@@ -88,30 +91,46 @@ void setup() {
 void readCommand(){
 
   if (EEBlue.available() > 0){
-    char input = EEBlue.read();
+    String input = EEBlue.readString();
+
+    if (input.length() == 1){
     
-    if (input == '1'){
-      // -- Cambio a Manual
-      direction = 'S';
-      lastDirection = 'S';
-      automatic = false;
-      moveStop();
-      centerPosition();
-      delay(500);
-    Serial.println("Cambio Manual");
-    } else if (input == '2'){
-      direction = 'S';
-      lastDirection = 'S';
-      automatic = true;
-      moveStop();
-      centerPosition();
-      delay(500);
-      Serial.println("Cambio Automático");
-    } else {
-      direction = input;
-      Serial.print("Dirección");
-      Serial.println(direction);
-       
+        if (input == "1"){
+          // -- Cambio a Manual
+          direction = "S";
+          lastDirection = "S";
+          automatic = false;
+          moveStop();
+          centerPosition();
+          delay(500);
+        Serial.println("Cambio Manual");
+        } else if (input == "2"){
+          direction = "S";
+          lastDirection = "S";
+          automatic = true;
+          moveStop();
+          centerPosition();
+          delay(500);
+          Serial.println("Cambio Automático");
+        } else {
+          direction = input;
+          Serial.print("Dirección");
+          Serial.println(direction);
+           
+        }
+    }else {
+      Serial.print("Velocidad: ");
+      Serial.print(input);
+      int index = input.indexOf("-");
+      String speedStr = input.substring(index+1, index+4);
+      Serial.print(" :  ");
+      Serial.println(speedStr);
+      if (input.startsWith("L")){ // --movimiento a la izquierda
+        speedLeft = speedStr.toInt();
+      } else if (input.startsWith("R")){ // -- movimiento a la derecha
+        speedRight = speedStr.toInt();        
+      }
+      
     }
     
   } 
@@ -157,12 +176,12 @@ void handleAutomatic(){
   bool isForward = checkForward();
   if (isForward){
     Serial.println("de frente");
-    direction = 'F';
+    direction = "F";
     sendData();
     moveForward();
   } else {
      moveStop();
-     direction = 'B';
+     direction = "B";
      sendData();
      int position = 4;
      while (position == 4){
@@ -173,11 +192,11 @@ void handleAutomatic(){
      }  
 
      if (position == 2){
-        direction = 'R';
+        direction = "R";
         sendData();
         turnRight(500);    
      } else if (position == 3){
-        direction = 'L';
+        direction = "L";
         sendData();
         turnLeft(500);
      }
@@ -301,19 +320,19 @@ void handleManual(){
  * Movimiento manual del robot
  */
 void movementManual(){
-  if (direction == 'S'){
+  if (direction == "S"){
     moveStop();
     //findDireccion();
-  } else if (direction == 'F'){
+  } else if (direction == "F"){
     moveForward();
-  } else if (direction == 'B'){
+  } else if (direction == "B"){
     moveBack();
-  } else if (direction == 'L'){
+  } else if (direction == "L"){
     turnLeft(500);
-    direction = 'S';
-  } else if (direction == 'R'){
+    direction = "S";
+  } else if (direction == "R"){
     turnRight(500);
-    direction = 'S';
+    direction = "S";
   } else {
     moveStop();
   }
@@ -327,8 +346,8 @@ void movementManual(){
  */
 void moveForward(){
 
-  moveWheelLeftForward(SPEED);
-  moveWheelRightForward((SPEED + 50));
+  moveWheelLeftForward(speedLeft);
+  moveWheelRightForward(speedRight);
   
 }
 
@@ -336,19 +355,19 @@ void moveForward(){
  * Movimiento hacia atrás
  */
 void moveBack(){
-  moveWheelLeftBack(SPEED);
-  moveWheelRightBack((SPEED + 50));
+  moveWheelLeftBack(speedLeft);
+  moveWheelRightBack(speedRight);
 }
 
 void turnLeft(long time){
-  moveWheelRightForward(SPEED);
-  moveWheelLeftBack(SPEED);
+  moveWheelRightForward(speedRight);
+  moveWheelLeftBack(speedLeft);
   delay(time);
 }
 
 void turnRight(long time){
-  moveWheelLeftForward(SPEED);
-  moveWheelRightBack(SPEED);
+  moveWheelLeftForward(speedLeft);
+  moveWheelRightBack(speedRight);
   delay(time);
 }
 

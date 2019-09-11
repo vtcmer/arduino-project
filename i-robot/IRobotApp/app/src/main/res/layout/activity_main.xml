@@ -1,89 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-    <ScrollView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:id="@+id/scrollView">
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btnManual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Manual"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/active"/>
+
+
+        <Button
+            android:id="@+id/btnAutomatic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="Automático"
+            android:layout_marginRight="30dp"
+            android:background="@color/disabled"/>
+
+        <Button
+            android:id="@+id/btnModeStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stop"
+            android:background="@color/stop"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:orientation="horizontal">
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin">
+            android:orientation="vertical"
+            android:layout_marginLeft="18dp">
+
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/linearContenedor">
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="fill_parent"
-                    android:layout_above="@+id/linearContenedorProbarConexion"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/Conexion">
-
-
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/linearPruebaConexion">
-
-                        <Button
-                            android:id="@+id/btnManual"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:text="Manual"
-                            android:layout_marginRight="30dp"
-                            android:background="@color/active"/>
-
-
-                        <Button
-                            android:id="@+id/btnAutomatic"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentTop="true"
-                            android:text="Automático"
-                            android:layout_marginRight="30dp"
-                            android:background="@color/disabled"/>
-
-                        <Button
-                            android:id="@+id/btnModeStop"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentTop="true"
-                            android:text="Stop"
-                            android:background="@color/stop"/>
-
-
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/linearSeparador"
-                    android:layout_gravity="center_vertical"
-                    android:layout_margin="@dimen/linearSeparador"
-                    android:id="@+id/lineaSeparador"></LinearLayout>
-
-
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="10dp">
 
                 <ImageButton
                     android:id="@+id/btnForward"
@@ -95,63 +72,123 @@
                     android:src="@android:drawable/arrow_up_float"
                     android:background="@color/enabled"/>
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginBottom="30dp">
 
-                    <ImageButton
-                        android:id="@+id/btnLeft"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@color/enabled"
-                        android:src="@android:drawable/ic_media_rew"
-                        android:text="Izquierda" />
+            </LinearLayout>
 
 
-                    <Button
-                        android:id="@+id/btnStop"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_gravity="center"
-                        android:background="@color/stop"
-                        android:gravity="center"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="20dp"
-                        android:text="O" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                    <ImageButton
-                        android:id="@+id/btnRight"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@color/enabled"
-                        android:src="@android:drawable/ic_media_ff"
-                        android:text="Derecha" />
+                <ImageButton
+                    android:id="@+id/btnLeft"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@color/enabled"
+                    android:src="@android:drawable/ic_media_rew"
+                    android:text="Izquierda"
+                    android:layout_marginLeft="1dp"/>
 
 
-                </LinearLayout>
+                <Button
+                    android:id="@+id/btnStop"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@color/stop"
+                    android:text="O"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"/>
+
+                <ImageButton
+                    android:id="@+id/btnRight"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@color/enabled"
+                    android:src="@android:drawable/ic_media_ff"
+                    android:text="Derecha"
+                    android:layout_marginRight="1dp"/>
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp">
+
                 <ImageButton
                     android:id="@+id/btnBack"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
                     android:text="Atrás"
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:src="@android:drawable/arrow_down_float"
                     android:background="@color/enabled"/>
 
+
             </LinearLayout>
 
-        </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="30dp">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="IZ:"
+                    android:id="@+id/txtSeekBarLeft"
+                    android:layout_gravity="center"/>
+
+                <SeekBar
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:progress="0"
+                    android:max="55"
+                    android:id="@+id/seekBarLeft"
+                    android:indeterminate="false" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="60dp">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="DE:"
+                    android:id="@+id/txtSeekBarRigth"
+                    android:layout_gravity="center"/>
+
+                <SeekBar
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:progress="0"
+                    android:max="55"
+                    android:id="@+id/seekBarRight"
+                    android:indeterminate="false" />
+            </LinearLayout>
+
+
+        </LinearLayout>
 
 
 
 
-    </ScrollView>
+
+    </LinearLayout>
 
 
-</RelativeLayout>
+
+
+
+</LinearLayout>

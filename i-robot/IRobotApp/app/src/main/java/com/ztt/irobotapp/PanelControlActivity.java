@@ -63,7 +63,7 @@ public class PanelControlActivity extends AppCompatActivity implements Comunicat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_panel_control);
         ButterKnife.bind(this);
 
         this.bluetoothService = new BluetoothService();

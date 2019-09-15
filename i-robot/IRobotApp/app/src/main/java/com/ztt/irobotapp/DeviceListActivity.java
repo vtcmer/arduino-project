@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,12 +12,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Set;
+import com.ztt.irobotapp.services.BluetoothService;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DeviceListActivity extends AppCompatActivity {
+public class DeviceListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     // Debugging for LOGCAT
     private static final String TAG = "DeviceListActivity";
@@ -29,11 +30,15 @@ public class DeviceListActivity extends AppCompatActivity {
     @BindView(R.id.connecting)
     TextView connecting;
     @BindView(R.id.paired_devices)
-    ListView pairedDevices;
+    ListView pairedListDevices;
+    @BindView(R.id.title_paired_devices)
+    TextView titlePairedDevices;
 
-    // Member fields
-    private BluetoothAdapter mBtAdapter;
+
     private ArrayAdapter<String> mPairedDevicesArrayAdapter;
+
+    private BluetoothService bluetoothService;
+    private List<BluetoothDevice> devicesList;
 
 
     @Override
@@ -41,15 +46,21 @@ public class DeviceListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_list);
         ButterKnife.bind(this);
+
+        try {
+            bluetoothService = new BluetoothService();
+        } catch (RuntimeException r) {
+            Toast.makeText(getBaseContext(), "El dispositivo no soporta Bluetooth", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //***************
+
         checkBTState();
 
-        connecting = (TextView) findViewById(R.id.connecting);
         connecting.setTextSize(40);
         connecting.setText(" ");
 
@@ -57,20 +68,16 @@ public class DeviceListActivity extends AppCompatActivity {
         mPairedDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_name);
 
         // Find and set up the ListView for paired devices
-        ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
-        pairedListView.setAdapter(mPairedDevicesArrayAdapter);
-        pairedListView.setOnItemClickListener(mDeviceClickListener);
+        pairedListDevices.setAdapter(mPairedDevicesArrayAdapter);
+        pairedListDevices.setOnItemClickListener(this);
 
-        // Get the local Bluetooth adapter
-        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+        devicesList = bluetoothService.getDevicesAvailables();
 
-        // Get a set of currently paired devices and append to 'pairedDevices'
-        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
 
         // Add previosuly paired devices to the array
-        if (pairedDevices.size() > 0) {
-            findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);//make title viewable
-            for (BluetoothDevice device : pairedDevices) {
+        if (devicesList.size() > 0) {
+            titlePairedDevices.setVisibility(View.VISIBLE);//make title viewable
+            for (BluetoothDevice device : devicesList) {
                 mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
             }
         } else {
@@ -80,36 +87,33 @@ public class DeviceListActivity extends AppCompatActivity {
     }
 
 
-    // Set up on-click listener for the list (nicked this - unsure)
-    private AdapterView.OnItemClickListener mDeviceClickListener = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
 
-            connecting.setText("Conectando...");
-            // Get the device MAC address, which is the last 17 chars in the View
-            String info = ((TextView) v).getText().toString();
-            String address = info.substring(info.length() - 17);
-
-            // Make an intent to start next activity while taking an extra which is the MAC address.
-            Intent i = new Intent(DeviceListActivity.this, MainActivity.class);
-            i.putExtra(EXTRA_DEVICE_ADDRESS, address);
-            startActivity(i);
-        }
-    };
-
+    /**
+     * Verifica el estado de la conexión con bluetooth
+     */
     private void checkBTState() {
-        // Check device has Bluetooth and that it is turned on
-        mBtAdapter=BluetoothAdapter.getDefaultAdapter(); // CHECK THIS OUT THAT IT WORKS!!!
-        if(mBtAdapter==null) {
-            Toast.makeText(getBaseContext(), "El dispositivo no soporta Bluetooth", Toast.LENGTH_SHORT).show();
-        } else {
-            if (mBtAdapter.isEnabled()) {
-                Log.d(TAG, "...Bluetooth Activado...");
-            } else {
-                //Prompt user to turn on Bluetooth
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, 1);
 
-            }
+        Boolean enabled = bluetoothService.isEnabled();
+
+        if (!enabled) {
+            //Prompt user to turn on Bluetooth
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 1);
+
         }
+
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        connecting.setText("Conectando...");
+        BluetoothDevice device = devicesList.get(position);
+
+        Intent i = new Intent(DeviceListActivity.this, PanelControlActivity.class);
+        i.putExtra(EXTRA_DEVICE_ADDRESS, device.getAddress());
+        startActivity(i);
+
     }
 }

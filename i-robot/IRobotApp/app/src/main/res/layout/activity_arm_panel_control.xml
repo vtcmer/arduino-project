@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+
+        <Button
+            android:id="@+id/btnForward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Adelante"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/disabled"/>
+
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="Atrás"
+            android:layout_marginRight="30dp"
+            android:background="@color/disabled"/>
+
+        <Button
+            android:id="@+id/btnCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Centrar"
+            android:background="@color/stop"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+        <Button
+            android:id="@+id/btnOpen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Abrir"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/disabled"/>
+
+
+        <Button
+            android:id="@+id/btnClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="Cerrar"
+            android:layout_marginRight="30dp"
+            android:background="@color/disabled"/>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:orientation="horizontal">
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginLeft="18dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="10dp">
+
+                <ImageButton
+                    android:id="@+id/btnUp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:text="Adelante"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:src="@android:drawable/arrow_up_float"
+                    android:background="@color/enabled"/>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnLeft"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@color/enabled"
+                    android:src="@android:drawable/ic_media_rew"
+                    android:text="Izquierda"
+                    android:layout_marginLeft="1dp"/>
+
+
+                <Button
+                    android:id="@+id/btnStop"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@color/stop"
+                    android:text="O"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"/>
+
+                <ImageButton
+                    android:id="@+id/btnRight"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@color/enabled"
+                    android:src="@android:drawable/ic_media_ff"
+                    android:text="Derecha"
+                    android:layout_marginRight="1dp"/>
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp">
+
+                <ImageButton
+                    android:id="@+id/btnDown"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:text="Atrás"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:src="@android:drawable/arrow_down_float"
+                    android:background="@color/enabled"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

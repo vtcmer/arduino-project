@@ -111,7 +111,7 @@ public class DeviceListActivity extends AppCompatActivity implements AdapterView
         connecting.setText("Conectando...");
         BluetoothDevice device = devicesList.get(position);
 
-        Intent i = new Intent(DeviceListActivity.this, PanelControlActivity.class);
+        Intent i = new Intent(DeviceListActivity.this, ArmPanelControlActivity.class);
         i.putExtra(EXTRA_DEVICE_ADDRESS, device.getAddress());
         startActivity(i);
 

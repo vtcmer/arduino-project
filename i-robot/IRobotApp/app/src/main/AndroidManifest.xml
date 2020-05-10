@@ -3,7 +3,7 @@
     package="com.ztt.irobotapp">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:allowBackup="true"
@@ -12,8 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PanelControlActivity"
-            android:screenOrientation="portrait"></activity>
+        <activity android:name=".ArmPanelControlActivity"
+            android:label="Arm Robot"></activity>
+        <activity
+            android:name=".PanelControlActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".DeviceListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
